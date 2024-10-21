@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xfinity RP - Recrutements</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Variables CSS */
+        :root {
+            --primary-color: #ff4d4d;
+            --secondary-color: #cc0000;
+            --background-color: #121212;
+            --text-color: #ffffff;
+            --header-bg: rgba(30, 30, 30, 0.9);
+            --footer-bg: #1e1e1e;
+            --card-bg: #1e1e1e;
+            --transition-speed: 0.3s;
+            --player-bg: rgba(30, 30, 30, 0.8);
+            --player-text: #ffffff;
+            --player-progress-bg: #444444;
+            --player-progress-fill: #ff4d4d;
+            --player-volume-bg: #444444;
+            --player-volume-fill: #ff4d4d;
+            --button-hover-bg: rgba(255, 77, 77, 0.8);
+            --animation-duration: 1s;
+        }
+
+        /* Corps du document */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+            user-select: none; /* Désactive la sélection de texte */
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            overflow-x: hidden;
+            padding-bottom: 100px; /* Espace pour le lecteur de musique intégré dans la navbar */
+        }
+
+        /* Animation de Fond Très Sombre et Vivante */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0f0c29; /* Couleur de base très sombre */
+            background: linear-gradient(to top, #24243e, #302b63, #0f0c29); /* Dégradé sombre */
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        /* Ajout d'éléments animés sur le fond */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 10s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1000px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: var(--header-bg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            z-index: 1000;
+            backdrop-filter: blur(10px); /* Effet de flou pour le fond */
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav .logo {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-right: 20px;
+            animation: slideInLeft var(--animation-duration) ease forwards;
+        }
+
+        /* Navigation Links */
+        nav ul {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+            flex: 1;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInUp var(--animation-duration) ease forwards;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 600;
+            transition: color var(--transition-speed);
+            font-size: 1em;
+            padding: 5px 0;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        /* Menu Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            margin-left: 20px;
+            animation: fadeIn var(--animation-duration) ease forwards;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text-color);
+            margin: 4px 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Music Player */
+        .music-player {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--player-text);
+            margin-left: 15px;
+            background: var(--player-bg);
+            padding: 10px 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: background-color var(--transition-speed), transform 0.3s ease;
+            animation: fadeInUp var(--animation-duration) ease forwards;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .music-player:hover {
+            transform: translateY(0) scale(1.05);
+            background: var(--player-bg);
+        }
+
+        .music-player .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .music-player .controls button {
+            background: none;
+            border: none;
+            color: var(--player-text);
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: color var(--transition-speed);
+        }
+
+        .music-player .controls button:hover {
+            color: var(--primary-color);
+        }
+
+        .music-player .progress-container {
+            position: relative;
+            width: 150px;
+            height: 5px;
+            background-color: var(--player-progress-bg);
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .music-player .progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background-color: var(--player-progress-fill);
+            border-radius: 5px;
+        }
+
+        .music-player .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .music-player .volume-container input[type=range] {
+            width: 80px;
+            cursor: pointer;
+        }
+
+        /* Responsive Navigation */
+        @media (max-width: 768px) {
+            nav .logo {
+                margin-right: 0;
+            }
+
+            nav ul {
+                position: absolute;
+                top: 60px;
+                left: -100%;
+                flex-direction: column;
+                background-color: var(--header-bg);
+                width: 100%;
+                transition: left 0.3s ease;
+            }
+
+            nav ul.active {
+                left: 0;
+            }
+
+            nav ul li {
+                margin: 15px 0;
+                text-align: center;
+                opacity: 1;
+                transform: translateY(0);
+                animation: none;
+            }
+
+            .hamburger {
+                display: flex;
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .music-player {
+                display: none; /* Cacher le lecteur sur mobile */
+            }
+        }
+
+        /* Toggle Mode Sombre/Clair */
+        .toggle-mode {
+            cursor: pointer;
+            font-size: 1.2em;
+            color: var(--text-color);
+            transition: color var(--transition-speed);
+            margin-left: 15px;
+            animation: fadeIn var(--animation-duration) ease forwards;
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        .toggle-mode:hover {
+            color: var(--primary-color);
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 20px 80px 20px;
+            min-height: 100vh;
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease, transform 1s ease;
+            animation: fadeInUp var(--animation-duration) ease forwards;
+        }
+
+        section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Homepage Section */
+        .home .container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .home h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            animation: slideInDown var(--animation-duration) ease forwards;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .home p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .home .btn {
+            padding: 10px 25px;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), transform 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .home .btn:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        /* À Propos Section */
+        .about .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .about h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .about p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        /* Fonctionnalités Section */
+        .features .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .feature-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            padding: 30px 20px;
+            width: 300px;
+            text-align: center;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp var(--animation-duration) ease forwards;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(255, 77, 77, 0.3);
+        }
+
+        .feature-card i {
+            font-size: 2.5em;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover i {
+            transform: scale(1.2);
+        }
+
+        .feature-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+            transition: color var(--transition-speed);
+        }
+
+        .feature-card p {
+            font-size: 1em;
+            color: var(--text-color);
+        }
+
+        /* Recrutements Section */
+        .recrutements .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .recrutements h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        /* Recruitment Status */
+        .recrutement-status {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            font-weight: bold;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .status-open-global {
+            color: #28a745; /* Vert pour ouvert */
+        }
+
+        .status-closed-global {
+            color: #dc3545; /* Rouge pour fermé */
+        }
+
+        /* Dropdown Menus */
+        details {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp var(--animation-duration) ease forwards;
+        }
+
+        details:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+        }
+
+        summary {
+            font-size: 1.8em;
+            color: var(--secondary-color);
+            cursor: pointer;
+            padding: 10px 0;
+            user-select: none;
+        }
+
+        .organizations-list, .gangs-list, .entreprises-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .organization-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            padding: 20px;
+            width: 300px;
+            text-align: center;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp var(--animation-duration) ease forwards;
+        }
+
+        .organization-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(255, 77, 77, 0.3);
+        }
+
+        .organization-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+            transition: color var(--transition-speed);
+        }
+
+        .organization-card p {
+            font-size: 1em;
+            color: var(--text-color);
+        }
+
+        .organization-status {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .status-open {
+            color: #28a745; /* Vert pour ouvert */
+        }
+
+        .status-closed {
+            color: #dc3545; /* Rouge pour fermé */
+        }
+
+        /* Événements Section */
+        .events h2 {
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            color: var(--primary-color);
+            text-align: center;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .event-list {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .event {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            padding: 20px;
+            width: 300px;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp var(--animation-duration) ease forwards;
+        }
+
+        .event:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+        }
+
+        .event h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+            transition: color var(--transition-speed);
+        }
+
+        .event p {
+            font-size: 1em;
+            line-height: 1.6;
+            color: var(--text-color);
+        }
+
+        /* Règlement Section */
+        .rules .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            position: relative; /* Pour positionner l'animation */
+            overflow: hidden; /* Pour cacher les parties de l'animation en dehors du conteneur */
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .rules h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            text-align: center;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .rules h3 {
+            font-size: 1.8em;
+            margin-top: 20px;
+            color: var(--secondary-color);
+        }
+
+        .rules ul {
+            list-style: disc inside;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+
+        .rules li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .rules .sanctions {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Animation 'Xfinity' Multipliée */
+        .xfinity-animation {
+            position: absolute;
+            font-size: 4em;
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.05); /* Couleur transparente */
+            white-space: nowrap;
+            animation: moveXfinity 20s linear infinite, fadeInOut 10s ease-in-out infinite;
+            pointer-events: none; /* Empêche l'interaction avec l'animation */
+        }
+
+        /* Multiple 'Xfinity' instances */
+        .xfinity-animation:nth-child(1) { top: 20px; left: 20px; animation-delay: 0s; }
+        .xfinity-animation:nth-child(2) { top: 60px; left: 80px; animation-delay: 5s; }
+        .xfinity-animation:nth-child(3) { top: 100px; left: 150px; animation-delay: 10s; }
+        .xfinity-animation:nth-child(4) { top: 140px; left: 220px; animation-delay: 15s; }
+
+        @keyframes moveXfinity {
+            0% { transform: translateX(0) rotate(0deg); }
+            50% { transform: translateX(-200px) rotate(360deg); }
+            100% { transform: translateX(0) rotate(720deg); }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.05; }
+            50% { opacity: 0.1; }
+        }
+
+        /* Contact Section */
+        .contact h2 {
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            color: var(--primary-color);
+            text-align: center;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        .contact-form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #444444;
+            border-radius: 5px;
+            font-size: 1em;
+            background-color: #2a2a2a;
+            color: var(--text-color);
+            transition: border-color var(--transition-speed);
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .contact-form button {
+            padding: 15px 30px;
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            border-radius: 25px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), transform 0.3s ease;
+        }
+
+        .contact-form button:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--footer-bg);
+            color: #ffffff;
+            padding: 30px 20px;
+            text-align: center;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        footer .social-links {
+            margin-top: 15px;
+            animation: fadeIn var(--animation-duration) ease forwards;
+        }
+
+        footer .social-links a {
+            color: #ffffff;
+            margin: 0 10px;
+            font-size: 1.5em;
+            transition: color var(--transition-speed);
+            text-decoration: none;
+        }
+
+        footer .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Light Mode Styles */
+        body.light-mode {
+            --background-color: #f4f4f4;
+            --text-color: #333333;
+            --header-bg: rgba(255, 255, 255, 0.9);
+            --footer-bg: #1e1e1e;
+            --card-bg: #ffffff;
+            --player-bg: rgba(255, 255, 255, 0.9);
+            --player-text: #333333;
+            --player-progress-bg: #cccccc;
+            --player-progress-fill: #ff4d4d;
+            --player-volume-bg: #cccccc;
+            --player-volume-fill: #ff4d4d;
+        }
+
+        body.light-mode nav ul li a {
+            color: var(--text-color);
+        }
+
+        body.light-mode nav ul li a:hover {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        body.light-mode .feature-card {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        body.light-mode .contact-form input,
+        body.light-mode .contact-form textarea {
+            background-color: #ffffff;
+            color: #333333;
+            border: 1px solid #cccccc;
+        }
+
+        body.light-mode .contact-form label {
+            color: var(--text-color);
+        }
+
+
+        body.light-mode footer {
+            background-color: var(--footer-bg);
+        }
+
+        body.light-mode .music-player {
+            background-color: var(--player-bg);
+            color: var(--player-text);
+        }
+
+        body.light-mode .music-player .controls button:hover {
+            color: var(--primary-color);
+        }
+
+        body.light-mode .music-player .progress-container {
+            background-color: var(--player-progress-bg);
+        }
+
+        body.light-mode .music-player .progress {
+            background-color: var(--player-progress-fill);
+        }
+
+        body.light-mode .music-player .volume-container input[type=range]::-webkit-slider-thumb {
+            background: var(--player-progress-fill);
+        }
+
+        body.light-mode .music-player .volume-container input[type=range]::-webkit-slider-runnable-track {
+            background: var(--player-progress-bg);
+        }
+
+        body.light-mode .rules .container {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        body.light-mode .rules ul {
+            color: var(--text-color);
+        }
+
+        body.light-mode .rules .sanctions {
+            color: var(--primary-color);
+        }
+
+        /* Additional Animations */
+        .fade-in {
+            animation: fadeIn 2s ease forwards;
+        }
+
+        .slide-in-left {
+            animation: slideInLeft 1s ease forwards;
+        }
+
+        .slide-in-right {
+            animation: slideInRight 1s ease forwards;
+        }
+
+/* Style pour la section Patch Notes */
+.patch-notes {
+    background-color: var(--background-color);
+    padding: 100px 20px 80px 20px;
+    min-height: 100vh;
+    animation: fadeInUp var(--animation-duration) ease forwards;
+}
+
+.patch-notes .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.patch-notes h2 {
+    font-size: 2.5em;
+    margin-bottom: 40px;
+    color: var(--primary-color);
+    animation: fadeIn var(--animation-duration) ease forwards;
+}
+
+.patch-note {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: left;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp var(--animation-duration) ease forwards;
+}
+
+.patch-note:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(255, 77, 77, 0.3);
+}
+
+.patch-note h3 {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    color: var(--secondary-color);
+}
+
+.patch-note ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    color: var(--text-color);
+}
+
+.patch-note li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.patch-note code {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+    </style>
+    <script>
+        // Génération aléatoire des particules pour l'animation de fond
+        document.addEventListener('DOMContentLoaded', () => {
+            const particlesContainer = document.createElement('div');
+            particlesContainer.classList.add('particles');
+            document.body.appendChild(particlesContainer);
+
+            const numberOfParticles = 100;
+            for(let i=0; i<numberOfParticles; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                const size = Math.random() * 6 + 3; // Taille entre 3px et 9px
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.opacity = Math.random();
+                const duration = Math.random() * 20 + 10; // Durée entre 10s et 30s
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${Math.random() * duration}s`;
+                particlesContainer.appendChild(particle);
+            }
+        });
+
+        // Désactivation du Copier-Coller et du clic droit
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Désactiver le clic droit
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+
+            // Désactiver les touches de copier/coller
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+C, Ctrl+V, Ctrl+X
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'v' || e.key === 'x')) {
+                    e.preventDefault();
+                }
+            });
+
+            // Toggle Hamburger Menu
+            const hamburger = document.querySelector('.hamburger');
+            const navLinks = document.querySelector('nav ul');
+
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+                hamburger.classList.toggle('toggle');
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">Xfinity RP</div>
+        <ul>
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#about">À Propos</a></li>
+            <li><a href="#features">Fonctionnalités</a></li>
+            <li><a href="#events">Événements</a></li>
+            <li><a href="#recrutements">Recrutements</a></li> <!-- Bouton renommé -->
+            <!-- Ajoutez ce lien dans la liste de navigation -->
+            <li><a href="#patch-notes">Patch Notes</a></li>
+            <li><a href="#rules">Règlement</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="music-player">
+            <div class="controls">
+                <button id="prev" title="Précédent"><i class="fas fa-backward"></i></button>
+                <button id="play" title="Play/Pause"><i class="fas fa-play"></i></button>
+                <button id="next" title="Suivant"><i class="fas fa-forward"></i></button>
+            </div>
+            <div class="progress-container" id="progress-container" title="Avancer/Reculer">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="volume-container">
+                <i class="fas fa-volume-down"></i>
+                <input type="range" id="volume" min="0" max="100" value="10">
+            </div>
+        </div>
+        <div class="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </nav>
+
+    <!-- Homepage Section -->
+    <section id="home" class="home active">
+        <div class="container">
+            <h1>Xfinity RP</h1>
+            <p>Bienvenue sur notre site ! Profitez de la meilleure expérience de jeu sur FiveM grâce à nos scripts personnalisés et notre savoir-faire exceptionnel. Cliquez sur le bouton ci-dessous pour nous rejoindre sur Discord.</p>
+            <a href="https://discord.gg/kMGBkNeDFv" class="btn">Rejoignez-Nous</a>
+        </div>
+    </section>
+
+    <!-- À Propos Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2>À Propos de Xfinity RP</h2>
+            <p>Xfinity RP est un serveur FiveM à 80% basé sur OX, offrant une expérience de jeu immersive et optimisée pour la performance. Nous développons nos propres scripts en Full OX pour garantir une touche unique et un gameplay fluide. Bien que notre communauté soit encore en croissance, chaque joueur est accueilli avec bienveillance et nos événements réguliers ainsi que nos scènes RP de haute qualité assurent une expérience captivante. Que vous soyez un joueur débutant ou expérimenté, Xfinity RP vous propose un environnement où vous pouvez évoluer et vous immerger pleinement.</p>
+        </div>
+    </section>
+
+    <!-- Fonctionnalités Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="feature-card">
+                <i class="fas fa-cogs"></i>
+                <h3>Scripts Personnalisés</h3>
+                <p>Nous avons commencé à développer nos propres scripts en Full OX pour offrir une touche d'unicité et garantir des performances optimales. Chaque script est conçu avec soin pour enrichir l'expérience de jeu. Cependant, ne soyez pas étonnés de voir encore quelques scripts externes : nous faisons les choses petit à petit et remplaçons progressivement les anciens par nos propres créations pour un serveur toujours plus fluide et unique.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-users"></i>
+                <h3>Communauté</h3>
+                <p>Pour le moment, notre communauté n'est pas encore grande, mais nous faisons de notre mieux pour la faire grandir chaque jour. Les scènes RP sont tout aussi immersives et de grande qualité, même avec un effectif réduit. Chaque membre apporte sa touche, et nous sommes toujours prêts à accueillir de nouveaux joueurs dans une ambiance dynamique et bienveillante. N'hésitez pas à participer à des événements passionnants et à contribuer à notre expansion !</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-shield-alt"></i>
+                <h3>Sécurité</h3>
+                <p>Chers joueurs, nous tenons à vous informer que nous n'utilisons pas de système anti-cheat automatique pour éviter les nombreux problèmes de bannissement injustifié qui peuvent survenir. Cependant, ne vous inquiétez pas : la ville est constamment surveillée et chaque action est minutieusement enregistrée. Toute tricherie ou comportement inapproprié sera rapidement détecté et traité par l'équipe de modération. Nous privilégions une approche humaine et proactive pour garantir une expérience de jeu juste et agréable pour tous.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-calendar-alt"></i>
+                <h3>Événements Réguliers</h3>
+                <p>Participez à des événements variés et bien organisés, conçus pour rassembler la communauté et offrir des défis stimulants.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-comments"></i>
+                <h3>Support</h3>
+                <p>Notre équipe de support est présente pour répondre à vos questions et résoudre vos problèmes, mais il est important de savoir patienter. L'équipe du staff a également une vie en dehors du jeu, parfois avec des obligations familiales. Nous ferons toujours de notre mieux pour vous aider dans les plus brefs délais, mais merci de respecter le temps de réponse sans insistance excessive.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recrutements Section -->
+    <section id="recrutements" class="recrutements">
+        <div class="container">
+            <h2>Recrutements</h2>
+            <div class="recrutement-status">
+                Recrutement Staff : <span class="status-open-global">Fermer</span>
+            </div>
+
+            <!-- Dropdown pour Entreprises -->
+            <details>
+                <summary>Entreprises</summary>
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>LSPD</h3>
+                        <p class="organization-status status-open">Recrutement ouvert</p>
+                </div>
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>EMS</h3>
+                        <p class="organization-status status-open">A reprendre</p>
+                </div>
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>Xfinity Motorworks</h3>
+                        <p class="organization-status status-open">Recrutement ouvert</p>
+                </div>    
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>Luxury Motorsport</h3>
+                        <p class="organization-status status-open">A reprendre</p>
+                </div>
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>Tabagiste</h3>
+                        <p class="organization-status status-open">A reprendre</p>
+                </div>
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>Taxi</h3>
+                        <p class="organization-status status-open">A reprendre</p>
+                </div>  
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>MooreClub</h3>
+                        <p class="organization-status status-open">A reprendre</p>
+                </div>
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>Vigneron</h3>
+                        <p class="organization-status status-open">A reprendre</p>
+                </div>
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>Agent Immobilier</h3>
+                        <p class="organization-status status-open">Ne recrute pas</p>
+                </div>          
+            </details>
+
+            <!-- Dropdown pour Entreprises Interimaire -->
+            <details>
+                <summary>Entreprises Interimaires</summary>
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>Bucheron</h3>
+                        <p class="organization-status status-open">Libre d'accés</p>
+                </div>
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>Eboueur</h3>
+                        <p class="organization-status status-open">Libre d'accés</p>
+                </div>   
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>Agriculteur</h3>
+                        <p class="organization-status status-open">Libre d'accés</p>
+                </div> 
+                <div class="entreprises-list">
+                    <div class="organization-card">
+                        <h3>Recolte Fruits/Legumes</h3>
+                        <p class="organization-status status-open">Libre d'accés</p>
+                </div> 
+            </details>
+
+            <!-- Dropdown pour Organisations -->
+            <details>
+                <summary>Organisations</summary>
+                <div class="organizations-list">
+                    <div class="organization-card">
+                        <h3>Mafia Napolitaine</h3>
+                        <p class="organization-status status-open">A reprendre</p>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Dropdown pour Gangs -->
+            <details>
+                <summary>Gangs</summary>
+                <div class="gangs-list">
+                    <div class="organization-card">
+                        <h3>Pinks Panthers</h3>
+                        <p class="organization-status status-closed">A reprendre</p>
+                    </div>
+                </div>
+            </details>
+
+        </div>
+    </section>
+
+
+    <!-- Événements Section -->
+    <section id="events" class="events">
+        <h2>Événements à Venir</h2>
+        <div class="event-list">
+            <div class="event">
+                <h3>Course de Rue Nocturne</h3>
+                <p>Rejoignez-nous pour une course palpitante à travers les rues de Los Santos. Des prix excitants vous attendent !</p>
+            </div>
+            <div class="event">
+                <h3>Festival de Musique</h3>
+                <p>Profitez d'une soirée musicale avec des DJs en direct et des performances spéciales. Une nuit inoubliable garantie.</p>
+            </div>
+            <div class="event">
+                <h3>Tournoi de Combat</h3>
+                <p>Testez vos compétences dans notre tournoi de combat et devenez le champion de Xfinity RP.</p>
+            </div>
+            <div class="event">
+                <h3>Soirée Cinéma</h3>
+                <p>Regardez un film en direct avec d'autres membres de la communauté dans notre espace dédié.</p>
+            </div>
+            <div class="event">
+                <h3>Concours de Drift</h3>
+                <p>Participez à notre concours de drift et montrez vos talents de pilote. Les meilleures figures remporteront des récompenses !</p>
+            </div>
+            <div class="event">
+                <h3>Défilé de Mode</h3>
+                <p>Montrez votre sens du style lors de notre défilé de mode roleplay. Les tenues les plus créatives et élégantes seront récompensées !</p>
+            </div>
+            <div class="event">
+                <h3>Course d'Obstacle en Vélo</h3>
+                <p>Enfourchez votre vélo et affrontez un parcours d'obstacles rempli de défis à travers la ville. Le premier à franchir la ligne d'arrivée gagnera un prix spécial !</p>
+            </div>
+            <div class="event">
+                <h3>Compétition de Pêche</h3>
+                <p>Participez à notre compétition de pêche et tentez de capturer le plus gros poisson. De nombreuses récompenses sont à la clé pour les meilleurs pêcheurs !</p>
+            </div>
+        </div>
+    </section>
+
+<!-- Section Patch Notes -->
+<section id="patch-notes" class="patch-notes">
+    <div class="container">
+        <h2>Patch Notes</h2>
+
+        <!-- Patch Note 2 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 16/10/2024 à 02h31</h3>
+            <ul>
+                <li>Mise à jour du métier de bûcheron vers la dernière version d'ESX.</li>
+                <li>Mise à jour de plusieurs ressources mineures vers la dernière version d'ESX.</li>
+                <li>Correction de Leboncoin, résolvant les erreurs affichées dans la console F8.</li>
+                <li>Ajout d'un tout nouveau braquage de bijouterie, entièrement développé en Full OX par nos soins. Vous aurez la possibilité de voler jusqu'à 10 items différents autant de fois que possible pendant la durée du braquage. Les chances de succès dépendront de la valeur des items. Si vous parvenez à échapper à la police, vous pourrez revendre ces items au receleur, à condition de l’avoir déjà trouvé sur la carte 😜.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L'équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 3 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 12/10/2024 à 20h41</h3>
+            <ul>
+                <li>Refonte complète du métier de Police.</li>
+                <li>Correction des points de garage manquants.</li>
+                <li>Amélioration globale de l'expérience pour les forces de l'ordre.</li>
+                <li>Nouvelle activité : Minage de cryptomonnaies avancé.</li>
+                <li>Système de craft Full Ox exclusif.</li>
+                <li>Possibilité de miner en arrière-plan pendant votre connexion en ville.</li>
+                <li>Une innovation unique, développée spécialement par et pour XFINITY.</li>
+                <li>Optimisation du système d'inventaire.</li>
+                <li>Correction du script de sac à dos.</li>
+                <li>Possibilité de déposer votre sac au sol ou de le ranger dans un coffre ou coffre de véhicule le sac se retirera alors bien de votre dos.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L'équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 4 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 10/10/2024 à 21h24</h3>
+            <ul>
+                <li>Modernisation des stations-service : Toutes les stations ont été remplacées par des stations Full OX, intégrant un système d'achat de jerricans sous forme d’items. Ces jerricans peuvent désormais être rangés correctement, évitant ainsi qu'ils restent bloqués dans les mains.</li>
+                <li>Ajout de distributeurs de nourriture : Profitez de distributeurs entièrement fonctionnels sous OX, avec de nouveaux items exclusifs à découvrir.</li>
+                <li>Nouveau script de revente : Le script Leboncoin (concessionnaire occasions) a été remplacé par une version que nous avons développée nous-mêmes, entièrement fonctionnel avec le système OX.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L’équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 5 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 09/10/2024 à 05h12</h3>
+            <ul>
+                <li>Ajout des braquages de superettes avec alerte à la police (une superette peut être braquée 1 seule fois en 24h, il vous faudra obligatoirement un pistolet pour pouvoir braquer).</li>
+                <li>Changement du script braquage de Fleeca Bank avec alertes à la police (il vous faudra un sac et une perceuse pour procéder) vous pourrez les trouver chez le vendeur d'objets illégaux.</li>
+                <li>Ajout d'un gofast avec alertes à la police.</li>
+                <li>Suppression du mapping Mont Chilliad car malheureusement il causait énormément de problèmes avec le GPS.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L'équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 6 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 08/10/2024 à 09h03</h3>
+            <ul>
+                <li>Nouveau script d'ascenseur : Ce script, destiné aux employés de l'hôpital, est désormais plus complet et fonctionne en OX !</li>
+                <li>Nouveau script de gym : Avec ce script, vous pourrez faire du sport. Grâce à un système de compétences, améliorez votre endurance, votre vitesse de course à pied, votre force, votre précision de tir et réduisez le recul de vos armes.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L'équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 7 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 08/10/2024 à 03h34</h3>
+            <ul>
+                <li>Nouveau script d'ascenseur pour les employés de l'hôpital. Ce script, plus complet et fonctionnant en OX, améliorera votre expérience au sein de l'établissement.</li>
+                <li>Nouveau script de GYM : désormais, vous pourrez vous adonner à des activités sportives. Grâce à un système de compétences, vous aurez la possibilité d'améliorer votre endurance, votre force, votre précision au tir, et de réduire le recul des armes.</li>
+                <li>Création d'un script complet en OX pour les machines à boissons (Sodas, Eau, Café). 10 sortes de cafés ont été ajoutés. D'autres machines, comme celles à biscuits et à chips, seront ajoutées prochainement. J'ai investi beaucoup de temps et d'énergie dans la conception de ce script, et j'espère qu'il saura vous plaire 🙂 Rohh laissez ma fierté tranquille 😂.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L’équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 8 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 07/10/2024 à 19h36</h3>
+            <ul>
+                <li>Refonte du script de l'auto-école : un tout nouveau système plus immersif avec des instructions vocales en français a été créé. Les joueurs ayant déjà obtenu leurs permis de conduire (auto, moto, camion) devront les repasser pour s'adapter à cette nouvelle expérience.</li>
+                <li>Ajout d'un personnage non-joueur (Ped) dédié à la revente d'armes et de munitions. Ce personnage est bien caché sur la carte, à vous de le trouver !</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L'équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 9 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 07/10/2024 à 02h45</h3>
+            <ul>
+                <li>Mise à jour complète du téléphone (1.7.5 vers 2.1.1).</li>
+                <li>Ajout de toutes les entreprises dans l'application "Service" et dans les contacts de votre téléphone.</li>
+                <li>Ajout de 38 nouvelles musiques dans le téléphone.</li>
+                <li>Ajout de nouvelles sonneries sur le téléphone.</li>
+                <li>Ajout de 11 sons de notifications sur vos téléphones.</li>
+                <li>Création des systèmes de doorlocks pour les lieux suivants :
+                    <ul>
+                        <li>EMS</li>
+                        <li>BurgerShot</li>
+                        <li>MooreClub</li>
+                        <li>Agent Immobilier</li>
+                        <li>Vigneron</li>
+                        <li>Tabac</li>
+                    </ul>
+                </li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L’équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 10 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 22/09/2024 à 02h36</h3>
+            <ul>
+                <li>Suppression des garages : Le véhicule persistant a été rétabli. Si un véhicule est mal garé, la police ou l'équipe de Xfinity pourra le mettre en fourrière. Si le véhicule est repéré à plusieurs reprises garé de manière incorrecte, il pourrait être totalement détruit.</li>
+                <li>Remplacement du système de clés des véhicules : Le nouveau système, développé entièrement par Xfinity, utilise toujours la touche U pour verrouiller et déverrouiller les véhicules. Pour la première utilisation, il faudra être à l'extérieur du véhicule.</li>
+                <li>Modification du mapping Xfinity Tower : Les PNJ n'apparaîtront plus à l'intérieur ou sur le terrain du bâtiment.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L'équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 11 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 14/09/2024 à 19h28</h3>
+            <ul>
+                <li>Ajout d'un job Tabac full OX.</li>
+                <li>Ajout des clés pour les véhicules du job Tabac avec la touche Y.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L'équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 12 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 14/08/2024 à 01h36</h3>
+            <ul>
+                <li>Suppression du menu pause pour une expérience plus fluide.</li>
+                <li>Ajout d’un shop de tatouages avec accès via le mode "alt".</li>
+                <li>Mise à jour du HUD incluant une alarme pour les ceintures non attachées.</li>
+                <li>Révision des boutiques de coiffure intégrées dans le mode "alt".</li>
+                <li>Modification des stations de lavage de voitures.</li>
+                <li>Nouvelle fonctionnalité de poussée des véhicules grâce au mode "alt" (utilisez les touches A & D pour tourner).</li>
+                <li>Système de clés révisé : pour obtenir de nouvelles clés, montez dans vos véhicules et appuyez sur la touche U.</li>
+                <li>Mise à jour du concessionnaire automatique nombre total de véhicules disponibles "455".</li>
+                <li>Augmentation de l’aide de l’État pour les chômeurs à 500 $ toutes les 45 minutes.</li>
+                <li>Ajout de nouveaux garages et fourrières accessible via le mode "alt".</li>
+                <li>Révision des prix des véhicules au concessionnaire automatique pour mieux refléter leur âge et leur catégorie.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L'équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 13 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 08/08/2024 à 23h01</h3>
+            <ul>
+                <li>Ajout d'un Digital Den, de deux boutiques de vêtements et d'une banque au centre commercial.</li>
+                <li>Ajout d'un mapping Xfinity Motorworks, personnalisé à 95%.</li>
+                <li>Ouverture d'un nouveau concessionnaire d'importation, avec l'ajout de 10 véhicules imports (3 véhicules supplémentaires seront ajoutés chaque semaine).</li>
+                <li>Ajout d'un mapping LSPD entièrement personnalisé à Sandy Shores.</li>
+                <li>Mise en place de nouvelles installations de la LSPD à l'aéroport et à Sandy Shores.</li>
+                <li>Introduction d'un tout nouveau système de drogues, incluant la weed, la meth et la cocaïne (récolte en plantes, traitement en laboratoire, vente au détail ou en gros en trouvant le dealer).</li>
+                <li>Ajout de 5 fourrières supplémentaires.</li>
+                <li>Ouverture d'un supermarché à Sandy Shores.</li>
+                <li>Création d'un nouveau métier : agent immobilier. L'agent peut désormais vous vendre une maison où vous le souhaitez, sur terrain plat si possible, avec un large choix d'intérieurs et extérieurs. Ce n'est pas tout : il peut également vous aider à construire une île privée !</li>
+                <li>Le métier d'agriculteur peut désormais être utilisé en intérim, sans perte de votre emploi principal.</li>
+                <li>Ajout d'un service de location de véhicules à la sortie de la prison.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L'équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 14 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 24/07/2024 à 19h36</h3>
+            <ul>
+                <li>Changement du hud.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>L'équipe XFINITY RP</p>
+        </div>
+
+        <!-- Patch Note 15 -->
+        <div class="patch-note">
+            <h3>Annonce de mise à jour - 04/07/2024 à 00h42</h3>
+            <ul>
+                <li>Changement complet de la création de personnages.</li>
+                <li>Modification de la radio par une version plus sympa en tant qu'item.</li>
+                <li>Mise en place d'un nouveau écran de chargement.</li>
+                <li>Ajout du anti bunny hop.</li>
+                <li>Système de factions remplacé par le double job.</li>
+                <li>Toutes les zones sécurisées ont été supprimées.</li>
+            </ul>
+            <p>Cordialement,</p>
+            <p>[L'équipe de XFINITY RP]</p>
+        </div>
+    </div>
+</section>
+
+
+
+    
+    <!-- Règlement Section -->
+    <section id="rules" class="rules">
+        <div class="container">
+            <h2>Règlement</h2>
+            
+            <!-- Règlement Discord -->
+            <h3>Règlement du Serveur Discord</h3>
+            <ul>
+                <li>Respectez tous les membres. Aucun harcèlement, discrimination ou langage offensant ne sera toléré.</li>
+                <li>Ne partagez pas de contenu illégal, NSFW ou piraté.</li>
+                <li>Utilisez les canaux appropriés pour vos discussions. Les discussions hors sujet peuvent être déplacées par les modérateurs.</li>
+                <li>Pas de spam, de publicité ou de promotion non autorisée.</li>
+                <li>Suivez les instructions des modérateurs et administrateurs.</li>
+                <li>Ne divulguez pas d'informations personnelles (vôtres ou celles des autres).</li>
+                <li>Les noms d'utilisateur ne doivent pas contenir de langage offensant.</li>
+                <li>Utilisez les fonctionnalités du serveur de manière responsable.</li>
+                <li>Toute infraction à ces règles entraînera des sanctions appropriées, allant de l'avertissement au bannissement temporaire ou permanent.</li>
+                <li>Les conversations doivent rester respectueuses, même en cas de désaccord. Les débats sont encouragés, mais le respect mutuel est essentiel.</li>
+                <li>Pas de trolling, de provocation ou de comportements visant à créer une atmosphère toxique.</li>
+                <li>Les discussions concernant des sujets sensibles (politique, religion, etc.) doivent se faire dans le respect des opinions de chacun.</li>
+                <li>Les canaux vocaux doivent être utilisés de manière respectueuse. Pas d'interruptions intentionnelles ni de perturbations.</li>
+                <li>Le partage de fichiers doit respecter les lois en vigueur, et tout contenu suspect sera supprimé.</li>
+                <li>Les bots doivent être utilisés conformément à leurs fonctionnalités prévues. Toute utilisation abusive sera sanctionnée.</li>
+                <li>Si vous avez un problème avec un autre membre, contactez un modérateur au lieu de régler le conflit publiquement.</li>
+                <li>Les serveurs externes, produits ou services ne peuvent être promus qu'avec l'autorisation préalable de l'administration.</li>
+                <li>Les messages privés non sollicités ou le spam par MP à d'autres membres peuvent entraîner des sanctions.</li>
+                <li>Tout usage abusif des mentions (@everyone, @here) est interdit et sera sanctionné.</li>
+                <li>Les membres doivent se conformer aux lois locales et aux conditions d'utilisation de Discord, ainsi qu'à celles du serveur.</li>
+                <li>En cas de suspicion de violation des règles, une enquête sera menée avant toute sanction. La collaboration avec l'administration est requise.</li>
+            </ul>
+
+            <!-- Règlement Roleplay -->
+            <h3>Règlement du Roleplay</h3>
+            <ul>
+                <li>Maintenez l'immersion en respectant le rôle que vous avez choisi. Hors-rôle sans raison valable n'est pas permis.</li>
+                <li>Pas de metagaming : n'utilisez pas les informations obtenues en dehors du jeu pour influencer le jeu.</li>
+                <li>Pas de powergaming : évitez d'imposer des actions irréalistes ou impossibles à votre personnage.</li>
+                <li>Respectez la propriété et les biens des autres joueurs.</li>
+                <li>Les actions doivent être décrites de manière réaliste et cohérente avec le contexte du jeu.</li>
+                <li>Pas de griefing : ne cherchez pas à déranger ou saboter l'expérience de jeu des autres.</li>
+                <li>Suivez les directives des administrateurs et des modérateurs en matière de gameplay.</li>
+                <li>Il est strictement interdit de voler ou d'utiliser les véhicules publics tels que les véhicules EMS ou LSPD sans autorisation. Le non-respect de cette règle entraînera des sanctions immédiates.</li>
+                <li>L'abus de farm est interdit afin de maintenir une économie stable et de préserver la qualité des scènes roleplay entre les joueurs. Toute exploitation excessive des ressources sera sanctionnée.</li>
+                <li>Le combat logging est interdit : quitter le jeu pour éviter une scène (fuite après arrestation, mort, poursuite, etc.) entraînera des sanctions.</li>
+                <li>Le revenge kill est interdit : revenir sur une scène où vous avez été tué pour vous venger n'est pas autorisé.</li>
+                <li>En cas de mort, vous devez jouer le fait d'avoir oublié les événements précédents. Le retour immédiat sur la scène sans raison valable est interdit.</li>
+                <li>Le New Life Rule (NLR) s'applique : après la mort, vous devez respecter un délai avant de revenir dans la zone où vous avez été tué et ne pas interagir avec les événements liés à votre mort.</li>
+                <li>Les interactions entre joueurs doivent se faire avec respect. Les insultes hors-rôle et les comportements toxiques sont interdits et seront sanctionnés.</li>
+                <li>Pas de random deathmatch (RDM) : attaquer ou tuer des joueurs sans raison valable ou sans roleplay est interdit.</li>
+                <li>Pas de vehicle deathmatch (VDM) : utiliser un véhicule pour tuer d'autres joueurs sans raison roleplay est interdit.</li>
+                <li>L'utilisation abusive des bugs et des exploits du jeu est formellement interdite. Tout joueur les exploitant sera sanctionné sévèrement.</li>
+                <li>Les scènes de kidnapping ou de braquage doivent être préalablement discutées avec l'administration si elles impliquent des joueurs EMS, LSPD ou dans des lieux publics.</li>
+                <li>Le troll, même léger, est interdit : tous les joueurs doivent jouer sérieusement et contribuer à l'immersion dans le roleplay.</li>
+                <li>Tout langage ou comportement discriminatoire (racisme, sexisme, homophobie, etc.) est strictement interdit et entraînera un bannissement immédiat.</li>
+                <li>L'utilisation du chat vocal ou texte doit être respectueuse. Aucune insulte, provocation ou abus de langage ne sera toléré.</li>
+                <li>Le roleplay de torture ou de scènes violentes est autorisé, mais nécessite l'accord des participants. Toute scène de ce type doit être jouée dans le respect des limites fixées par chaque joueur.</li>
+                <li>Les scènes sexuelles ou à caractère explicitement adulte sont interdites. Le serveur est un espace de jeu pour tous les âges et ce genre de contenu est inapproprié.</li>
+                <li>Tout acte de corruption ou d'abus de pouvoir dans les factions (police, EMS, gouvernement) doit être approuvé par un administrateur avant d'être joué.</li>
+                <li>En cas de conflit entre joueurs, il est demandé de régler le problème de manière mature et respectueuse. Si nécessaire, contactez un administrateur pour une médiation.</li>
+                <li>Il est interdit de créer ou d'utiliser des personnages pour uniquement nuire à l'expérience des autres (ex : créer un tueur en série sans raison roleplay cohérente).</li>
+                <li>Respectez les limitations du personnage : pas de multi-tâches irréalistes ou de surpuissance physique ou mentale (ex : un civil ne peut pas se battre comme un expert en arts martiaux sans formation adéquate).</li>
+                <li>Les scènes impliquant des actions illégales (braquages, cambriolages, etc.) doivent être organisées de manière réaliste et avec des moyens adaptés. Pas de comportements irréalistes (ex : braquer une banque seul sans plan).</li>
+                <li>La cohérence dans l'économie du jeu est essentielle. Le transfert d'argent entre personnages de manière abusive ou sans justification roleplay sera sanctionné.</li>
+                <li>Tout comportement contraire à ces règles entraînera des sanctions allant de l'avertissement à l'expulsion du serveur.</li>
+            </ul>
+
+            <!-- Sanctions -->
+            <h3>Sanctions</h3>
+            <ul>
+                <li><span class="sanctions">Avertissement :</span> Rappel des règles en cas de première infraction légère. Cet avertissement peut être verbal ou écrit, selon la gravité de l'infraction.</li>
+                <li><span class="sanctions">Mute temporaire :</span> Interdiction temporaire de parler dans les canaux vocaux ou textuels pour infractions répétées ou comportement perturbateur. La durée du mute dépendra de la gravité de l'infraction et du nombre de récidives.</li>
+                <li><span class="sanctions">Mute permanent :</span> Interdiction permanente de parler dans certains canaux vocaux ou textuels après des infractions graves ou un comportement perturbateur continu, même après plusieurs avertissements.</li>
+                <li><span class="sanctions">Kick :</span> Expulsion temporaire du serveur pour infractions majeures ou récurrentes. Un kick est une manière de rappeler aux membres que leur comportement doit changer avant de réintégrer le serveur.</li>
+                <li><span class="sanctions">Ban temporaire :</span> Expulsion du serveur pour une période définie (ex : 24 heures, 1 semaine) en cas de récidives multiples ou de comportement inapproprié sérieux.</li>
+                <li><span class="sanctions">Ban permanent :</span> Expulsion définitive du serveur pour infractions graves (harcèlement, diffusion de contenu illégal, piratage, etc.) ou pour des membres récidivistes qui ne montrent aucun signe d'amélioration après plusieurs sanctions.</li>
+                <li><span class="sanctions">Suppression de droits :</span> Perte de certains privilèges ou rôles pour non-respect des règles (ex : perte du droit d'envoyer des liens, d'utiliser certains canaux, etc.).</li>
+                <li><span class="sanctions">Limitation des permissions :</span> Réduction des capacités d'interaction sur le serveur (par exemple, interdiction de mentionner @everyone ou @here) en cas de mauvaise utilisation des fonctionnalités du serveur.</li>
+                <li><span class="sanctions">Blacklisting :</span> Mise en liste noire empêchant définitivement un membre d'accéder aux événements, giveaways ou toute autre fonctionnalité spéciale du serveur en raison d'un comportement inapproprié répété.</li>
+                <li><span class="sanctions">Signalement à Discord :</span> Dans les cas d'infractions très graves (par exemple, diffusion de contenu illégal), les membres concernés seront signalés directement à l'équipe de modération de Discord, en plus du ban permanent.</li>
+            </ul>
+
+            <!-- Multiples Animations 'Xfinity' -->
+            <div class="xfinity-animation">Xfinity</div>
+            <div class="xfinity-animation">Xfinity</div>
+            <div class="xfinity-animation">Xfinity</div>
+            <div class="xfinity-animation">Xfinity</div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <h2>Contactez-Nous</h2>
+        <div class="contact-form">
+            <form action="https://formspree.io/f/mwpkkzdr" method="POST">
+                <label for="name">Nom</label>
+                <input type="text" id="name" name="name" placeholder="Votre nom" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="_replyto" placeholder="Votre email" required>
+
+                <label for="message">Message</label>
+                <textarea id="message" name="message" rows="5" placeholder="Votre message" required></textarea>
+
+                <button type="submit">Envoyer</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Xfinity RP. Tous droits réservés.</p>
+        <div class="social-links">
+            <a href="https://discord.gg/qyGAMVmr7E" target="_blank" rel="noopener noreferrer"><i class="fab fa-discord"></i></a>
+        </div>
+    </footer>
+
+    <!-- Hidden Audio Element -->
+    <audio id="audio-player">
+        Votre navigateur ne supporte pas l'élément audio.
+    </audio>
+
+    <script>
+        // Navigation - Afficher la section correspondante avec animations
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('nav ul li a');
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+
+                sections.forEach(section => {
+                    if(section.id === targetId) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+
+                // Scroll en douceur vers la section
+                document.getElementById(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                // Fermer le menu hamburger sur mobile après un clic
+                if(window.innerWidth <= 768) {
+                    navLinks.forEach(l => l.parentElement.classList.remove('active'));
+                }
+            });
+        });
+
+        // Afficher la première section au chargement
+        window.addEventListener('load', () => {
+            const hash = window.location.hash.substring(1);
+            if(hash) {
+                const targetSection = document.getElementById(hash);
+                if(targetSection) {
+                    sections.forEach(section => {
+                        if(section.id === hash) {
+                            section.classList.add('active');
+                        } else {
+                            section.classList.remove('active');
+                        }
+                    });
+                } else {
+                    sections.forEach(section => section.classList.remove('active'));
+                    sections[0].classList.add('active');
+                }
+            } else {
+                sections.forEach(section => section.classList.remove('active'));
+                sections[0].classList.add('active');
+            }
+        });
+
+        // Mode Sombre/Clair
+        function toggleMode() {
+            document.body.classList.toggle('light-mode');
+        }
+
+        // Music Player
+        const audioPlayer = document.getElementById('audio-player');
+        const playButton = document.getElementById('play');
+        const prevButton = document.getElementById('prev');
+        const nextButton = document.getElementById('next');
+        const progressContainer = document.getElementById('progress-container');
+        const progress = document.getElementById('progress');
+        const volumeSlider = document.getElementById('volume');
+
+        const tracks = [
+        {
+                name: "XFINITY - Female 2",
+                url: "https://cdn.discordapp.com/attachments/1268299098042138808/1296392476105637948/XFINITY_11_FEMALE2.mp3?ex=67137094&is=67121f14&hm=5ef9c0262def101c3b4c0416c636147a75b7b788303461cd3bee9761b0acde14&"
+            },
+            {
+                name: "XFINITY - Female",
+                url: "https://cdn.discordapp.com/attachments/1268299098042138808/1296390907607646268/XFINITY_10_FEMALE.mp3?ex=67136f1e&is=67121d9e&hm=b2cb728575d94f12e890d753526a348c79d902ed76003b30aba0d25ef4c0e18d&"
+            },
+            {
+                name: "XFINITY - Sur le beat",
+                url: "https://cdn.discordapp.com/attachments/1268299098042138808/1296395167762223155/XFINITY_12_Sur_le_beat.mp3?ex=67137315&is=67122195&hm=471f8e617f561d5a973ac278f718f69bf8e0374e4e200384eca1c208099659ed&"
+            },
+            {
+                name: "XFINITY - La peur danse la danse",
+                url: "https://cdn.discordapp.com/attachments/1268299098042138808/1268299237737889975/XFINITY_6_La_peur_danse_la_danse.mp3?ex=671368f6&is=67121776&hm=2740e953926ead12d4d19d95c6b6105814650b09256a32f91f8a1e8ed499bf20&"
+            },
+            {
+                name: "XFINITY - Ne dors pas cette nuit",
+                url: "https://cdn.discordapp.com/attachments/1268299098042138808/1268299216950919249/XFINITY_5_Ne_dors_pas_cette_nuit.mp3?ex=671368f1&is=67121771&hm=794b9582c56ac1b0b24e9cc428d46cf6d86f50c7ed5789eaaa07076cb51671bb&"
+            },
+            {
+                name: "XFINITY - Dit son nom",
+                url: "https://cdn.discordapp.com/attachments/1268299098042138808/1268299193878052926/XFINITY_4_Dit_son_nom.mp3?ex=671368eb&is=6712176b&hm=f4454cd73095b78463864d9e58431e8c41da621f29ca605183fe59feeaee9e0b&"
+            },
+            {
+                name: "XFINITY - Vile de mysteres",
+                url: "https://cdn.discordapp.com/attachments/1268299098042138808/1268299175083376913/XFINITY_3_Ville_de_mysteres_2.mp3?ex=671368e7&is=67121767&hm=76d4fffe3130636a49242948e87c06c4760b8e07bcecec9b388b5e6c35bf27c0&"
+            },
+            {
+                name: "XFINITY - Vile de mysteres 2",
+                url: "https://cdn.discordapp.com/attachments/1268299098042138808/1268299152232808519/XFINITY_2_Ville_de_mysteres.mp3?ex=671368e1&is=67121761&hm=e40d5364edc861bfbc7e8cdf077910dcb6a94f40cdf793a7e760485fc99dda12&"
+            },
+            {
+                name: "XFINITY - Faut qu'on s'arrete",
+                url: "https://cdn.discordapp.com/attachments/1268299098042138808/1268299133631074324/XFINITY_1_Faut_quon_sarrete.mp3?ex=671368dd&is=6712175d&hm=243d86dcc285ad05f22d060fd787941b021f764a42f4c2ff9a27dd39b3645197&"
+            }
+        ];
+
+        let currentTrack = 0;
+        let isPlaying = false;
+
+        const playIcon = '<i class="fas fa-play"></i>';
+        const pauseIcon = '<i class="fas fa-pause"></i>';
+
+        // Charger une piste
+        function loadTrack(index) {
+            if(index < 0) {
+                currentTrack = tracks.length - 1;
+            } else if(index >= tracks.length) {
+                currentTrack = 0;
+            } else {
+                currentTrack = index;
+            }
+            audioPlayer.src = tracks[currentTrack].url;
+        }
+
+        // Jouer la piste
+        function playTrack() {
+            audioPlayer.play();
+            isPlaying = true;
+            playButton.innerHTML = pauseIcon;
+        }
+
+        // Mettre en pause la piste
+        function pauseTrack() {
+            audioPlayer.pause();
+            isPlaying = false;
+            playButton.innerHTML = playIcon;
+        }
+
+        // Bouton Play/Pause
+        playButton.addEventListener('click', () => {
+            if(isPlaying) {
+                pauseTrack();
+            } else {
+                playTrack();
+            }
+        });
+
+        // Bouton Suivant
+        nextButton.addEventListener('click', () => {
+            loadTrack(currentTrack + 1);
+            playTrack();
+        });
+
+        // Bouton Précédent
+        prevButton.addEventListener('click', () => {
+            loadTrack(currentTrack - 1);
+            playTrack();
+        });
+
+        // Mise à jour de la barre de progression
+        audioPlayer.addEventListener('timeupdate', () => {
+            const { duration, currentTime } = audioPlayer;
+            if (duration) {
+                const progressPercent = (currentTime / duration) * 100;
+                progress.style.width = `${progressPercent}%`;
+            }
+        });
+
+        // Clic sur la barre de progression
+        progressContainer.addEventListener('click', (e) => {
+            const width = progressContainer.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audioPlayer.duration;
+
+            if (duration) {
+                audioPlayer.currentTime = (clickX / width) * duration;
+            }
+        });
+
+        // Gestion du volume
+        volumeSlider.addEventListener('input', (e) => {
+            const volume = e.target.value / 100;
+            audioPlayer.volume = volume;
+        });
+
+        // Initialiser le volume à 10%
+        window.addEventListener('load', () => {
+            volumeSlider.value = 10;
+            audioPlayer.volume = 0.1;
+            loadTrack(currentTrack);
+        });
+
+        // Passage à la piste suivante à la fin de la piste actuelle
+        audioPlayer.addEventListener('ended', () => {
+            loadTrack(currentTrack + 1);
+            playTrack();
+        });
+
+        // Animations lors du scroll
+        window.addEventListener('scroll', () => {
+            const elements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right, .fadeInUp');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                if(rect.top < window.innerHeight - 100) {
+                    el.classList.add('visible');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
